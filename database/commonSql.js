@@ -28,10 +28,23 @@ export default class commonSql {
 
 		return new Promise((resolve, reject) => {
 			this.db.all(query, param, (error, rows) => {
-				if (error) return reject('common sql all: ' + error.message)
+				if (error) reject('common sql all: ' + error.message)
 
 				this.close()
 				resolve(rows)
+			})
+		})
+	}
+
+	static async get(query, param = []) {
+		await this.open()
+
+		return new Promise((resolve, reject) => {
+			this.db.get(query, param, (error, row) => {
+				if (error) reject('common sql get: ' + error.message)
+					
+				this.close()
+				resolve(row)
 			})
 		})
 	}
