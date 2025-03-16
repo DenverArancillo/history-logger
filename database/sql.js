@@ -4,34 +4,71 @@ sqlite3.verbose()
 
 let sql
 
-let db = new sqlite3.Database('./test.db', sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, err => {
-	if (err) return console.error('db connection', err.message)
+let db = new sqlite3.Database('./historylog.db', sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, error => {
+	if (error) return console.error('db connection', error.message)
 })
 
-sql = `CREATE TABLE users (id INTEGER PRIMARY KEY, first_name, last_name, username, password, email)`;
+db.serialize(() => {
 
-db.run(sql, (err) => {
-	if (err) return console.error('create table', err.message)
-}); 
+	db.run("PRAGMA foreign_keys=ON");
 
-sql = `INSERT INTO users(first_name, last_name, username, password, email) VALUES(?,?,?,?,?)`
+	sql = `CREATE TABLE IF NOT EXISTS tag (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		tag_name TEXT NOT NULL
+	)`
 
-db.run(
-	sql, 
-	['mike', 'michaelson', 'mike_user', 'test', 'mike@gmail.com']
-)
+	db.run(sql, (error) => {
+		if (error) return console.error('create table tag', error)
+	}); 
+
+	sql = `INSERT INTO tag (tag_name) VALUES(?)`
+
+	db.run(sql, ['sql test'], error => {
+		if (error) return console.error('insert table tag', error)
+	})
+
+	sql = `CREATE TABLE IF NOT EXISTS history_item (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			history_item_name TEXT NOT NULL,
+			history_item_type TEXT NOT NULL
+		)`
+
+	db.run(sql, (error) => {
+		if (error) return console.error('create table history_item', error)
+	})
+
+	sql = `CREATE TABLE IF NOT EXISTS history_item_tag (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			history_item_id INTEGER NOT NULL,
+			tag_id INTEGER NOT NULL,
+			FOREIGN KEY (history_item_id) 
+				REFERENCES history_item(id)
+					ON DELETE CASCADE
+					ON UPDATE NO ACTION,
+			FOREIGN KEY (tag_id) 
+				REFERENCES tag(id)
+					ON DELETE CASCADE
+					ON UPDATE NO ACTION
+		)`
+
+	db.run(sql, (error) => {
+		if (error) return console.error('create history_item_tag', error)
+	})
+
+})
+
 
 // sql = `UPDATE users SET first_name = ? WHERE id = ?`;
 
-// db.run(sql, ["Jake", 1], (err) => {
-// 	if (err) return console.error(err.message);
+// db.run(sql, ["Jake", 1], (error) => {
+// 	if (error) return console.error(error.message);
 // });
 
 // sql = `SELECT * FROM users`; 
 
 
-// db.all(sql, [], (err, rows) => {
-// 	if (err) return console.error(err.message);
+// db.all(sql, [], (error, rows) => {
+// 	if (error) return console.error(error.message);
 // 	rows.forEach((row) => {
 // 		console.log(row);
 // 	})
@@ -39,6 +76,6 @@ db.run(
 
 // sql = `DELETE FROM users WHERE id = ?`;
 
-// db.run(sql, [1], (err) => {
-// 	if (err) return console.error(err.message);
+// db.run(sql, [1], (error) => {
+// 	if (error) return console.error(error.message);
 // });
