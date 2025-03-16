@@ -25,6 +25,15 @@ async function test() {
 	}
 
 	try {
+		await sqlite.run(`INSERT INTO tag(tag_name) VALUES('sql test')`)
+		let rows = await sqlite.all('SELECT * FROM tag')
+		console.log('rows', rows)
+	} catch (error) {
+		return console.error('insert table tag', error)
+
+	}
+
+	try {
 		await sqlite.run(`CREATE TABLE IF NOT EXISTS history_item (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			history_item_name TEXT NOT NULL,
