@@ -12,7 +12,6 @@
     "license": "ISC",
     "description": "",
     "dependencies": {
-        "aa-sqlite": "^1.0.29",
         "colors": "^1.4.0",
         "express": "^4.21.2",
         "sqlite3": "^5.1.7"
