@@ -8,9 +8,9 @@ const selectAllTags = async () => {
 	}
 }
 
-const selectTag = async () => {
+const selectTagById = async id => {
 	try {
-		return await commonSql.get('SELECT * FROM tag')
+		return await commonSql.get(`SELECT * FROM tag WHERE id = ${id}`)
 	} catch (error) {
 		console.error('tagQueries select tag', error)		
 	}
@@ -18,5 +18,5 @@ const selectTag = async () => {
 
 export {
 	selectAllTags,
-	selectTag
+	selectTagById
 }
