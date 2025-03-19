@@ -1,4 +1,4 @@
-import { selectAllTags, selectTag } from '../database/tagQueries.js'
+import { selectAllTags, selectTagById } from '../database/tagQueries.js'
 
 const getAllTags = async (req, res) => {
 	let tags = await selectAllTags()
@@ -6,11 +6,16 @@ const getAllTags = async (req, res) => {
 }
 
 const getTag = async (req, res, next) => {
-	// const id = parseInt(req.params.id)
+	const id = parseInt(req.params.id)
+	let tag = await selectTagById(id)
 
-
-	let tag = await selectTag()
-	res.status(200).json(tag)
+	if (!tag) {
+		const error = new Error(`A tag with id of ${id} was not found`)
+		error.status = 404
+		next(error)
+	} else {
+		res.status(200).json(tag)
+	}
 }
 
 export {
