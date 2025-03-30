@@ -1,5 +1,9 @@
 import { Router } from 'express'
-import { getAllTags, getTag } from '../controllers/tagController.js'
+import { 
+	getAllTags, 
+	getTag,
+	createTag
+} from '../controllers/tagController.js'
 
 const router = Router()
 
@@ -7,7 +11,9 @@ const router = Router()
 router.get('/', getAllTags)
 
 // get tag by id
-// to implement logic
 router.get('/:id', getTag)
+
+// create new tag
+router.post('/', createTag)
 
 export default router
