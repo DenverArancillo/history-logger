@@ -48,4 +48,52 @@ export default class commonSql {
 			})
 		})
 	}
+
+	static async selectAll(table) {
+		return this.all(`SELECT * FROM ${table}`)
+	}
+
+	static async selectById(table, id) {
+		return this.get(`SELECT * FROM ${table} WHERE id = ${id}`)
+	}
+
+	static prepareInsertQuery(table, columnAndValue) {
+		let query = `INSERT INTO ${table}`
+		let queryColumn = '('
+		let queryValue = 'VALUES('
+		let propertyCount = Object.keys(columnAndValue).length - 1
+		let dataValues = []
+
+		Object.entries(columnAndValue).forEach(([key, value], index) => {
+			if (index === propertyCount) {
+				// last item
+				queryColumn += `${key})`
+				queryValue += `?)`
+			} else {
+				queryColumn += `${key},`
+				queryValue += `?,`
+			}
+			dataValues.push(value)
+		})
+
+		return {
+			query: `${query} ${queryColumn} ${queryValue}`,
+			dataValues
+		}
+	}
+
+	static async insert(table, columnAndValue) {
+		let { query, dataValues } = this.prepareInsertQuery(table, columnAndValue)
+		
+		await this.open()
+
+		return new Promise((resolve, reject) => {
+			this.db.run(query, dataValues, error => {
+				if (error) reject('common sql insert: ' + error.message)
+				
+				this.close()
+				resolve(true)
+			})
+		})
+	}
 }
