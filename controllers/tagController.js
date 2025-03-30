@@ -1,4 +1,8 @@
-import { selectAllTags, selectTagById } from '../database/tagQueries.js'
+import { 
+	selectAllTags, 
+	selectTagById,
+	inserTag
+} from '../database/tagQueries.js'
 
 const getAllTags = async (req, res) => {
 	let tags = await selectAllTags()
@@ -18,7 +22,31 @@ const getTag = async (req, res, next) => {
 	}
 }
 
+const createTag = async (req, res, next) => {
+	const newTag = { tag_name: req.body.tag_name }
+
+	if (!newTag.tag_name) {
+		const error = new Error('Please include a tag name')
+		error.status = 400
+		return next(error)
+	}
+
+	try {
+		await inserTag(newTag)
+
+		let tags = await selectAllTags()
+		res.status(201).json(tags)
+	} catch (error) {
+		console.error(error)
+
+		const errorMessage = new Error(`Create new tag failed`)
+		errorMessage.status = 500
+		return next(errorMessage)
+	}
+}
+
 export {
 	getAllTags,
-	getTag
+	getTag,
+	createTag
 }
