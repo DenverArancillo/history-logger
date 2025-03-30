@@ -1,17 +1,18 @@
 import { 
-	selectAllTags, 
-	selectTagById,
-	inserTag
+	selectQueryAllTags, 
+	selectQueryTagById,
+	insertQueryTag,
+	updateQueryTag
 } from '../database/tagQueries.js'
 
 const getAllTags = async (req, res) => {
-	let tags = await selectAllTags()
+	let tags = await selectQueryAllTags()
 	res.status(200).json(tags)
 }
 
 const getTag = async (req, res, next) => {
 	const id = parseInt(req.params.id)
-	let tag = await selectTagById(id)
+	let tag = await selectQueryTagById(id)
 
 	if (!tag) {
 		const error = new Error(`A tag with id of ${id} was not found`)
@@ -32,9 +33,9 @@ const createTag = async (req, res, next) => {
 	}
 
 	try {
-		await inserTag(newTag)
+		await insertQueryTag(newTag)
 
-		let tags = await selectAllTags()
+		let tags = await selectQueryAllTags()
 		res.status(201).json(tags)
 	} catch (error) {
 		console.error(error)
@@ -45,8 +46,34 @@ const createTag = async (req, res, next) => {
 	}
 }
 
+const updateTag = async (req, res, next) => {
+	const id = parseInt(req.params.id)
+	const updateTag = { id, tag_name: req.body.tag_name }
+
+	let tag = await selectQueryTagById(id)
+	if (!tag) {
+		const error = new Error(`A tag with id of ${id} was not found`)
+		error.status = 404
+		next(error)
+	}
+
+	try {
+		await updateQueryTag(updateTag)
+
+		let tag = await selectQueryTagById(id)
+		res.status(200).json(tag)
+	} catch (error) {
+		console.error(error)
+
+		const errorMessage = new Error(`Update new tag failed`)
+		errorMessage.status = 500
+		return next(errorMessage)
+	}
+}
+
 export {
 	getAllTags,
 	getTag,
-	createTag
+	createTag,
+	updateTag
 }
