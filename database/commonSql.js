@@ -84,12 +84,51 @@ export default class commonSql {
 
 	static async insert(table, columnAndValue) {
 		let { query, dataValues } = this.prepareInsertQuery(table, columnAndValue)
-		
+
 		await this.open()
 
 		return new Promise((resolve, reject) => {
 			this.db.run(query, dataValues, error => {
 				if (error) reject('common sql insert: ' + error.message)
+				
+				this.close()
+				resolve(true)
+			})
+		})
+	}
+
+	static prepareUpdateQuery(table, columnAndValue) {
+		let query = `UPDATE ${table} SET`
+		let { id, ...others } = columnAndValue
+		let columns = ''
+		let whereClause = `WHERE id = ${id}`
+		let propertyCount = Object.keys(others).length - 1
+		let dataValues = []
+
+		Object.entries(others).forEach(([key, value], index) => {
+			if (index === propertyCount) {
+				// last item 
+				columns += `${key} = ?`
+			} else {
+				columns += `${key} = ?,`
+			}
+			dataValues.push(value)
+		})
+
+		return {
+			query: `${query} ${columns} ${whereClause}`,
+			dataValues
+		}
+	}
+
+	static async update(table, columnAndValue) {
+		let { query, dataValues } = this.prepareUpdateQuery(table, columnAndValue)
+
+		await this.open()
+
+		return new Promise((resolve, reject) => {
+			this.db.run(query, dataValues, error => {
+				if (error) reject('common sql update: ' + error.message)
 				
 				this.close()
 				resolve(true)
