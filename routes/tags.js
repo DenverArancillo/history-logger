@@ -3,7 +3,8 @@ import {
 	getAllTags, 
 	getTag,
 	createTag,
-	updateTag
+	updateTag,
+	deleteTag
 } from '../controllers/tagController.js'
 
 const router = Router()
@@ -19,5 +20,8 @@ router.post('/', createTag)
 
 // update post
 router.put('/:id', updateTag)
+
+// delete post
+router.delete('/:id', deleteTag)
 
 export default router
