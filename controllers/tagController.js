@@ -2,7 +2,8 @@ import {
 	selectQueryAllTags, 
 	selectQueryTagById,
 	insertQueryTag,
-	updateQueryTag
+	updateQueryTag,
+	deleteQueryTag
 } from '../database/tagQueries.js'
 
 const getAllTags = async (req, res) => {
@@ -17,7 +18,7 @@ const getTag = async (req, res, next) => {
 	if (!tag) {
 		const error = new Error(`A tag with id of ${id} was not found`)
 		error.status = 404
-		next(error)
+		return next(error)
 	} else {
 		res.status(200).json(tag)
 	}
@@ -54,14 +55,14 @@ const updateTag = async (req, res, next) => {
 	if (!tag) {
 		const error = new Error(`A tag with id of ${id} was not found`)
 		error.status = 404
-		next(error)
+		return next(error)
 	}
 
 	try {
 		await updateQueryTag(updateTag)
 
-		let tag = await selectQueryTagById(id)
-		res.status(200).json(tag)
+		let updatedTag = await selectQueryTagById(id)
+		res.status(200).json(updatedTag)
 	} catch (error) {
 		console.error(error)
 
@@ -71,9 +72,32 @@ const updateTag = async (req, res, next) => {
 	}
 }
 
+const deleteTag = async (req, res, next) => {
+	const id = parseInt(req.params.id)
+
+	let tag = await selectQueryTagById(id)
+	if (!tag) {
+		const error = new Error(`A tag with id of ${id} was not found`)
+		error.status = 404
+		return next(error)
+	}
+	
+	try {
+		await deleteQueryTag(id)
+		res.status(200).json({ message: 'Successfully deleted' })
+	} catch (error) {
+		console.error(error)
+
+		const errorMessage = new Error(`Delete tag failed`)
+		errorMessage.status = 500
+		return next(errorMessage)
+	}
+}
+
 export {
 	getAllTags,
 	getTag,
 	createTag,
-	updateTag
+	updateTag,
+	deleteTag
 }
