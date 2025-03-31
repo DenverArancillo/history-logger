@@ -50,9 +50,22 @@ const updateQueryTag = async updateTag => {
 	}
 }
 
+/**
+ * Delete existing tag
+ * @param {int} id tag id
+ */
+const deleteQueryTag = async id => {
+	try {
+		await commonSql.delete('tag', id)
+	} catch (error) {
+		throw new Error('tagQueries delete tag' + error)
+	}
+}
+
 export {
 	selectQueryAllTags,
 	selectQueryTagById,
 	insertQueryTag,
-	updateQueryTag
+	updateQueryTag,
+	deleteQueryTag
 }
