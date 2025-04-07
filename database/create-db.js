@@ -29,8 +29,8 @@ db.serialize(() => {
 
 	sql = `CREATE TABLE IF NOT EXISTS history_item (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
-			history_item_name TEXT NOT NULL,
-			history_item_type TEXT NOT NULL
+			history_item_name TEXT NOT NULL DEFAULT '',
+			history_item_type TEXT CHECK( history_item_type IN ('int', 'string', 'img') ) NOT NULL DEFAULT 'int'
 		)`
 
 	db.run(sql, (error) => {
