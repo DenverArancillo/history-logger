@@ -15,6 +15,7 @@ import notFound from './middleware/notFound.js'
 // routes
 import posts from './routes/posts.js'
 import tags from './routes/tags.js'
+import historyItem from './routes/historyItem.js'
 
 const port = process.env.PORT || 8000
 const app = express()
@@ -32,6 +33,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 // routes
 app.use('/api/posts', posts)
 app.use('/api/tags', tags)
+app.use('/api/historyItem', historyItem)
 
 // error handler
 app.use(notFound)
