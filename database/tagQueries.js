@@ -7,7 +7,7 @@ const selectQueryAllTags = async () => {
 	try {
 		return await commonSql.selectAll('tag')
 	} catch (error) {
-		console.error('tagQueries select all tags', error)
+		throw new Error('tagQueries select all tags' + error)
 	}
 }
 
@@ -19,7 +19,7 @@ const selectQueryTagById = async id => {
 	try {
 		return await commonSql.selectById('tag', id)
 	} catch (error) {
-		console.error('tagQueries select tag', error)
+		throw new Error('tagQueries select tag' + error)
 	}
 }
 
