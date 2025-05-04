@@ -23,15 +23,28 @@ export default class commonSql {
 		return this.db.close()
 	}
 
-	static async all(query, param = []) {
+	static async all(query, param = [], errorMessage = 'common sql all: ') {
 		await this.open()
 
 		return new Promise((resolve, reject) => {
 			this.db.all(query, param, (error, rows) => {
-				if (error) reject('common sql all: ' + error.message)
+				if (error) reject(errorMessage + error.message)
 
 				this.close()
 				resolve(rows)
+			})
+		})
+	}
+
+	static async run(query, param = [], errorMessage) {
+		await this.open()
+
+		return new Promise((resolve, reject) => {
+			this.db.run(query, param, error => {
+				if (error) reject(errorMessage + error.message)
+				
+				this.close()
+				resolve(true)
 			})
 		})
 	}
@@ -85,16 +98,7 @@ export default class commonSql {
 	static async insert(table, columnAndValue) {
 		let { query, dataValues } = this.prepareInsertQuery(table, columnAndValue)
 
-		await this.open()
-
-		return new Promise((resolve, reject) => {
-			this.db.run(query, dataValues, error => {
-				if (error) reject('common sql insert: ' + error.message)
-				
-				this.close()
-				resolve(true)
-			})
-		})
+		return await this.run(query, dataValues, 'common sql insert: ')
 	}
 
 	static prepareUpdateQuery(table, columnAndValue) {
@@ -124,28 +128,10 @@ export default class commonSql {
 	static async update(table, columnAndValue) {
 		let { query, dataValues } = this.prepareUpdateQuery(table, columnAndValue)
 
-		await this.open()
-
-		return new Promise((resolve, reject) => {
-			this.db.run(query, dataValues, error => {
-				if (error) reject('common sql update: ' + error.message)
-				
-				this.close()
-				resolve(true)
-			})
-		})
+		return await this.run(query, dataValues, 'common sql update: ')
 	}
 
 	static async delete(table, id) {
-		await this.open()
-
-		return new Promise((resolve, reject) => {
-			this.db.run(`DELETE FROM ${table} WHERE id = ?`, [id], error => {
-				if (error) reject('common sql update: ' + error.message)
-				
-				this.close()
-				resolve(true)
-			})
-		})
+		return await this.run(`DELETE FROM ${table} WHERE id = ?`, [id], 'common sql update: ')
 	}
 }
