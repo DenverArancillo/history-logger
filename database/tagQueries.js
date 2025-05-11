@@ -19,15 +19,15 @@ const selectQueryTagById = async id => {
 	try {
 		return await commonSql.selectById('tag', id)
 	} catch (error) {
-		throw new Error('tagQueries select tag' + error)
+		throw new Error('tagQueries select tag by id' + error)
 	}
 }
 
- /**
-  * Insert new tag object to the database
-  * @param {object} newTag New tag object
-  * @param {string} newTag.tag_name tag name
-  */
+/**
+ * Insert new tag object to the database
+ * @param {object} newTag New tag object
+ * @param {string} newTag.tag_name tag name
+ */
 const insertQueryTag = async newTag => {
 	try {
 		await commonSql.insert('tag', newTag)
@@ -36,12 +36,12 @@ const insertQueryTag = async newTag => {
 	}
 }
 
- /**
-  * Update new tag object to the database
-  * @param {object} updateTag Update tag object
-  * @param {int} updateTag.id tag id
-  * @param {string} updateTag.tag_name tag name
-  */
+/**
+ * Update new tag object to the database
+ * @param {object} updateTag Update tag object
+ * @param {int} updateTag.id tag id
+ * @param {string} updateTag.tag_name tag name
+ */
 const updateQueryTag = async updateTag => {
 	try {
 		await commonSql.update('tag', updateTag)
