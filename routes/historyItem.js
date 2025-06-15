@@ -20,10 +20,10 @@ router.get('/:id', getHistoryItem)
 router.post('/', createHistoryItem)
 
 // update history item name
-router.put('/:id/updateName', updateHistoryItemName)
+router.put('/updateName/:id', updateHistoryItemName)
 
 // update history item type
-router.put('/:id/updateType', updateHistoryItemType)
+router.put('/updateType/:id', updateHistoryItemType)
 
 // delete history item
 router.delete('/:id', deleteHistoryItem)
