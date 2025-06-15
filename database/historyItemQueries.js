@@ -16,6 +16,14 @@ const selectQueryHistoryItemById = async id => {
 	}
 }
 
+const selectQueryHistoryItemByName = async name => {
+	try {
+		return await commonSql.selectByColumnIsEqualTo('history_item', 'history_item_name', name)
+	} catch (error) {
+		throw new Error('historyItemQueries select historyItem by name' + error)
+	}
+}
+
 /**
  * Insert new historyItem object to the database
  * @param {object} newHistoryItem New tag object
@@ -41,6 +49,7 @@ const updateQueryHistoryItem = async updateHistoryItem => {
 export {
 	selectQueryHistoryItems,
 	selectQueryHistoryItemById,
+	selectQueryHistoryItemByName,
 	insertQueryHistoryItem,
 	updateQueryHistoryItem
 }
