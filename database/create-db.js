@@ -56,26 +56,3 @@ db.serialize(() => {
 	})
 
 })
-
-
-// sql = `UPDATE users SET first_name = ? WHERE id = ?`;
-
-// db.run(sql, ["Jake", 1], (error) => {
-// 	if (error) return console.error(error.message);
-// });
-
-// sql = `SELECT * FROM users`; 
-
-
-// db.all(sql, [], (error, rows) => {
-// 	if (error) return console.error(error.message);
-// 	rows.forEach((row) => {
-// 		console.log(row);
-// 	})
-// })
-
-// sql = `DELETE FROM users WHERE id = ?`;
-
-// db.run(sql, [1], (error) => {
-// 	if (error) return console.error(error.message);
-// });
