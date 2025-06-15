@@ -3,7 +3,8 @@ import {
 	getAllHistoryItems,
 	getHistoryItem,
 	createHistoryItem,
-	updateHistoryItem,
+	updateHistoryItemName,
+	updateHistoryItemType,
 	deleteHistoryItem
 } from '../controllers/historyItemController.js'
 
@@ -18,8 +19,11 @@ router.get('/:id', getHistoryItem)
 // create new history item
 router.post('/', createHistoryItem)
 
-// update history item
-router.put('/:id', updateHistoryItem)
+// update history item name
+router.put('/:id/updateName', updateHistoryItemName)
+
+// update history item type
+router.put('/:id/updateType', updateHistoryItemType)
 
 // delete history item
 router.delete('/:id', deleteHistoryItem)
