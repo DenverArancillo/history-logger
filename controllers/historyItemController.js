@@ -1,9 +1,10 @@
+import { errorHandler } from './commonFunctions.js'
 import {
 	selectQueryHistoryItems,
 	selectQueryHistoryItemById,
-	insertQueryHistoryItem
+	insertQueryHistoryItem,
+	updateQueryHistoryItem
 } from '../database/historyItemQueries.js'
-import { errorHandler } from './commonController.js'
 
 const historyItemType = process.env.HISTORY_ITEM_TYPES.split('|')
 
@@ -29,6 +30,7 @@ const createHistoryItem = async (req, res, next) => {
 		history_item_type: req.body.history_item_type
 	}
 
+	// check on given data
 	if (!newHistoryItem.history_item_name) 
 		return next(errorHandler('Please include a history item name', 400))
 
@@ -49,7 +51,33 @@ const createHistoryItem = async (req, res, next) => {
 	}
 }
 
-const updateHistoryItem = async (req, res, next) => {
+const updateHistoryItemName = async (req, res, next) => {
+	const id = parseInt(req.params.id)
+	const updateHistoryItemName = { 
+		id, 
+		history_item_name: req.body.history_item_name,
+	}
+
+	if (!updateHistoryItemName.history_item_name)
+		return next(errorHandler('Please include a history item name', 400))
+
+	let historyItem = await selectQueryHistoryItemById(id)
+	if (!historyItem)
+		return next(errorHandler(`A history item with id of ${id} was not found`, 404))
+
+	try {
+		await updateQueryHistoryItem(updateHistoryItemName)
+
+		let updatedHistoryItemName = await selectQueryHistoryItemById(id)
+		res.status(200).json(updatedHistoryItemName)
+	} catch (error) {
+		console.error(error)
+
+		return next(errorHandler(`Update new tag failed`, 500))
+	}
+}
+
+const updateHistoryItemType = async (req, res, next) => {
 
 }
 
@@ -61,6 +89,7 @@ export {
 	getAllHistoryItems,
 	getHistoryItem,
 	createHistoryItem,
-	updateHistoryItem,
+	updateHistoryItemName,
+	updateHistoryItemType,
 	deleteHistoryItem
 }
