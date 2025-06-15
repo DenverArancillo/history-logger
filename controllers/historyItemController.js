@@ -2,6 +2,7 @@ import { errorHandler } from './commonFunctions.js'
 import {
 	selectQueryHistoryItems,
 	selectQueryHistoryItemById,
+	selectQueryHistoryItemByName,
 	insertQueryHistoryItem,
 	updateQueryHistoryItem
 } from '../database/historyItemQueries.js'
@@ -42,8 +43,13 @@ const createHistoryItem = async (req, res, next) => {
 	
 	try {
 		await insertQueryHistoryItem(newHistoryItem)
+		
+		let createdHistoryItem = await selectQueryHistoryItemByName(newHistoryItem.history_item_name)
 
-		res.status(201).json({ message: "Successfully created new history item" })
+		res.status(201).json({ 
+			...createdHistoryItem,
+			message: "Successfully created new history item"
+		})
 	} catch (error) {
 		console.error(error)
 
