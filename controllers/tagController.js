@@ -1,3 +1,4 @@
+import { errorHandler } from './commonFunctions.js'
 import { 
 	selectQueryAllTags, 
 	selectQueryTagById,
@@ -16,9 +17,7 @@ const getTag = async (req, res, next) => {
 	let tag = await selectQueryTagById(id)
 
 	if (!tag) {
-		const error = new Error(`A tag with id of ${id} was not found`)
-		error.status = 404
-		return next(error)
+		return next(errorHandler(`A tag with id of ${id} was not found`, 404))
 	} else {
 		res.status(200).json(tag)
 	}
@@ -28,9 +27,7 @@ const createTag = async (req, res, next) => {
 	const newTag = { tag_name: req.body.tag_name }
 
 	if (!newTag.tag_name) {
-		const error = new Error('Please include a tag name')
-		error.status = 400
-		return next(error)
+		return next(errorHandler('Please include a tag name', 400))
 	}
 
 	try {
@@ -41,9 +38,7 @@ const createTag = async (req, res, next) => {
 	} catch (error) {
 		console.error(error)
 
-		const errorMessage = new Error(`Create new tag failed`)
-		errorMessage.status = 500
-		return next(errorMessage)
+		return next(errorHandler(`Create new tag failed`, 500))
 	}
 }
 
@@ -53,9 +48,7 @@ const updateTag = async (req, res, next) => {
 
 	let tag = await selectQueryTagById(id)
 	if (!tag) {
-		const error = new Error(`A tag with id of ${id} was not found`)
-		error.status = 404
-		return next(error)
+		return next(errorHandler(`A tag with id of ${id} was not found`, 404))
 	}
 
 	try {
@@ -66,9 +59,7 @@ const updateTag = async (req, res, next) => {
 	} catch (error) {
 		console.error(error)
 
-		const errorMessage = new Error(`Update new tag failed`)
-		errorMessage.status = 500
-		return next(errorMessage)
+		return next(errorHandler(`Update new tag failed`, 500))
 	}
 }
 
@@ -77,9 +68,7 @@ const deleteTag = async (req, res, next) => {
 
 	let tag = await selectQueryTagById(id)
 	if (!tag) {
-		const error = new Error(`A tag with id of ${id} was not found`)
-		error.status = 404
-		return next(error)
+		return next(errorHandler(`A tag with id of ${id} was not found`, 404))
 	}
 	
 	try {
@@ -88,9 +77,7 @@ const deleteTag = async (req, res, next) => {
 	} catch (error) {
 		console.error(error)
 
-		const errorMessage = new Error(`Delete tag failed`)
-		errorMessage.status = 500
-		return next(errorMessage)
+		return next(errorHandler(`Delete tag failed`, 500))
 	}
 }
 
