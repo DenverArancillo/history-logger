@@ -62,12 +62,16 @@ export default class commonSql {
 		})
 	}
 
-	static async selectAll(table) {
+	static selectAll(table) {
 		return this.all(`SELECT * FROM ${table}`)
 	}
 
-	static async selectById(table, id) {
+	static selectById(table, id) {
 		return this.get(`SELECT * FROM ${table} WHERE id = ${id}`)
+	}
+
+	static selectByColumnIsEqualTo(table, column, value) {
+		return this.get(`SELECT * FROM ${table} WHERE ${column} = '${value}'`)
 	}
 
 	static prepareInsertQuery(table, columnAndValue) {
