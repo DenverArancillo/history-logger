@@ -30,8 +30,17 @@ const insertQueryHistoryItem = async newHistoryItem => {
 	}
 }
 
+const updateQueryHistoryItem = async updateHistoryItem => {
+	try {
+		await commonSql.update('history_item', updateHistoryItem)
+	} catch (error) {
+		throw new Error('historyItemQueries update history item name' + error)
+	}
+}
+
 export {
 	selectQueryHistoryItems,
 	selectQueryHistoryItemById,
-	insertQueryHistoryItem
+	insertQueryHistoryItem,
+	updateQueryHistoryItem
 }
