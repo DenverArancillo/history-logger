@@ -246,16 +246,6 @@
 					"name": "Update history item name",
 					"event": [
 						{
-							"listen": "prerequest",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						},
-						{
 							"listen": "test",
 							"script": {
 								"exec": [
@@ -270,13 +260,13 @@
 									"    response.to.have.status(200)\r",
 									"})\r",
 									"\r",
-									"test('should have id and tag_name in response body', () => {\r",
+									"test('should have id and history_item_name in response body', () => {\r",
 									"    expect(response.json()).to.have.property('id')\r",
 									"    expect(response.json()).to.have.property('history_item_name')\r",
 									"    expect(response.json()).to.have.property('history_item_type')\r",
 									"})\r",
 									"\r",
-									"test('get single history_item api shound respond with updated history_item', () => {\r",
+									"test('get single history_item api should respond with updated history_item', () => {\r",
 									"    let apiUrl = pm.environment.replaceIn('{{apiUrl}}')\r",
 									"    let updatedHistoryItemId = pm.request.url.path.pop()\r",
 									"    \r",
@@ -285,11 +275,21 @@
 									"\r",
 									"        let request_history_item_name = getUrlencodedValue(pm.request.body.urlencoded, 'history_item_name')\r",
 									"\r",
-									"        expect(testResponse.code).to.be.eq(200)\r",
+									"        expect(testResponse).to.have.property('code', 200)\r",
 									"        expect(testResponse.json()).to.have.property('history_item_name')\r",
-									"        expect(testResponse.json().tag_name).to.be.eq(request_history_item_name)\r",
+									"        expect(testResponse.json().history_item_name).to.be.eq(request_history_item_name)\r",
 									"    })\r",
 									"})\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
 									""
 								],
 								"type": "text/javascript",
