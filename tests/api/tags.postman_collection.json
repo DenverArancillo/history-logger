@@ -1,0 +1,324 @@
+{
+	"info": {
+		"_postman_id": "815a5200-f4d6-47a5-80a8-d707044dd5a1",
+		"name": "tags",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "7884085"
+	},
+	"item": [
+		{
+			"name": "Get all tags",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const { response, test, expect } = pm\r",
+							"\r",
+							"test('should have status code 200', () => {\r",
+							"    response.to.have.status(200)\r",
+							"})\r",
+							"\r",
+							"test('should have greater than or equal to zero data length', () => {\r",
+							"    expect(response.json().length >= 0).to.satisfy(num => {\r",
+							"        return (num >= 0) ? true : false\r",
+							"    })\r",
+							"})\r",
+							"\r",
+							"test('response body should be an array', () => {\r",
+							"    expect(Array.isArray(response.json())).to.be.true\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{apiUrl}}/tags",
+					"host": [
+						"{{apiUrl}}"
+					],
+					"path": [
+						"tags"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get single tag",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const { response, test, expect } = pm\r",
+							"\r",
+							"test('should have status code 200', () => {\r",
+							"    response.to.have.status(200)\r",
+							"})\r",
+							"\r",
+							"test('should have property of id and tag_name', () => {\r",
+							"    let data = response.json()\r",
+							"    expect(data).to.have.property('id')\r",
+							"    expect(data).to.have.property('tag_name')\r",
+							"})\r",
+							"\r",
+							"test('response body should be an object', () => {\r",
+							"    let data = response.json()\r",
+							"    expect(\r",
+							"        typeof data === 'object' && \r",
+							"        !Array.isArray(data) && \r",
+							"        data !== null\r",
+							"    ).to.be.true\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{apiUrl}}/tags/1",
+					"host": [
+						"{{apiUrl}}"
+					],
+					"path": [
+						"tags",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create tag",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const { response, test, expect } = pm\r",
+							"\r",
+							"const getUrlencodedValue = (urlencodedData, key) => {\r",
+							"    let { value } = urlencodedData.filter(item => item.key === key).pop()\r",
+							"    return value\r",
+							"}\r",
+							"\r",
+							"const getNewTagObject = () => {\r",
+							"    let request_tag_name = getUrlencodedValue(pm.request.body.urlencoded, 'tag_name')\r",
+							"    let newTagObject = response.json().find(({ tag_name }) => tag_name === request_tag_name)\r",
+							"    return newTagObject\r",
+							"}\r",
+							"\r",
+							"test('should have status code 200', () => {\r",
+							"    response.to.have.status(201)\r",
+							"})\r",
+							"\r",
+							"test('response should contain created tag', () => {\r",
+							"    expect(!!getNewTagObject()).to.be.true\r",
+							"})\r",
+							"\r",
+							"test('response body should be an array', () => {\r",
+							"    expect(Array.isArray(response.json())).to.be.true\r",
+							"})\r",
+							"\r",
+							"// save new tag id in environment\r",
+							"pm.environment.set('test_tag_id', getNewTagObject().id)\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "tag_name",
+							"value": "createTagName-{{$randomAdjective}}-{{$timestamp}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{apiUrl}}/tags/",
+					"host": [
+						"{{apiUrl}}"
+					],
+					"path": [
+						"tags",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update tag",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const { response, test, expect, sendRequest } = pm\r",
+							"\r",
+							"const getUrlencodedValue = (urlencodedData, key) => {\r",
+							"    let { value } = urlencodedData.filter(item => item.key === key).pop()\r",
+							"    return value\r",
+							"}\r",
+							"\r",
+							"test('should have status code 200', () => {\r",
+							"    response.to.have.status(200)\r",
+							"})\r",
+							"\r",
+							"test('should have id and tag_name in response body', () => {\r",
+							"    expect(response.json()).to.have.property('id')\r",
+							"    expect(response.json()).to.have.property('tag_name')\r",
+							"})\r",
+							"\r",
+							"test('get single tag api shound respond with updated tag', () => {\r",
+							"    let apiUrl = pm.environment.replaceIn('{{apiUrl}}')\r",
+							"    let updatedTagId = pm.request.url.path.pop()\r",
+							"    \r",
+							"    sendRequest(`${apiUrl}/tags/${updatedTagId}`, (error, testResponse) => {\r",
+							"        if (error) console.log(error)\r",
+							"\r",
+							"        let request_tag_name = getUrlencodedValue(pm.request.body.urlencoded, 'tag_name')\r",
+							"\r",
+							"        expect(testResponse.code).to.be.eq(200)\r",
+							"        expect(testResponse.json()).to.have.property('tag_name')\r",
+							"        expect(testResponse.json().tag_name).to.be.eq(request_tag_name)\r",
+							"    })\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "tag_name",
+							"value": "updateTag-{{$randomAdjective}}-{{$timestamp}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{apiUrl}}/tags/{{test_tag_id}}",
+					"host": [
+						"{{apiUrl}}"
+					],
+					"path": [
+						"tags",
+						"{{test_tag_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete tag",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const { response, test, expect, sendRequest } = pm\r",
+							"\r",
+							"test('should have status code 200', () => {\r",
+							"    response.to.have.status(200)\r",
+							"})\r",
+							"\r",
+							"test('get single tag api shound not find deleted tag', () => {\r",
+							"    let apiUrl = pm.environment.replaceIn('{{apiUrl}}')\r",
+							"    let deletedTagId = pm.request.url.path.pop()\r",
+							"    \r",
+							"    sendRequest(`${apiUrl}/tags/${deletedTagId}`, (error, testReponse) => {\r",
+							"        if (error) console.log(error)\r",
+							"\r",
+							"        expect(testReponse.code).to.be.eq(404)\r",
+							"    })\r",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{apiUrl}}/tags/{{test_tag_id}}",
+					"host": [
+						"{{apiUrl}}"
+					],
+					"path": [
+						"tags",
+						"{{test_tag_id}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
