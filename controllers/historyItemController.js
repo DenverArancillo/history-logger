@@ -4,7 +4,8 @@ import {
 	selectQueryHistoryItemById,
 	selectQueryHistoryItemByName,
 	insertQueryHistoryItem,
-	updateQueryHistoryItem
+	updateQueryHistoryItem,
+	deleteQueryHistoryItem
 } from '../database/historyItemQueries.js'
 
 const historyItemType = process.env.HISTORY_ITEM_TYPES.split('|')
@@ -84,11 +85,49 @@ const updateHistoryItemName = async (req, res, next) => {
 }
 
 const updateHistoryItemType = async (req, res, next) => {
+	const id = parseInt(req.params.id)
+	const updateHistoryItemType = {
+		id,
+		history_item_type: req.body.history_item_type,
+	}
 
+	if (!updateHistoryItemType.history_item_type)
+		return next(errorHandler('Please include a history item type', 400))
+
+	let historyItem = await selectQueryHistoryItemById(id)
+	if (!historyItem)
+		return next(errorHandler(`A history item with id of ${id} was not found`, 404))
+
+	try {
+		await updateQueryHistoryItem(updateHistoryItemType)
+
+		let updatedHistoryItemName = await selectQueryHistoryItemById(id)
+		res.status(200).json(updatedHistoryItemName)
+	} catch (error) {
+		console.error(error)
+
+		return next(errorHandler(`Update new tag failed`, 500))
+	}
 }
 
 const deleteHistoryItem = async (req, res, next) => {
+	// add check if exsting history_item_tag entry exists
 
+	const id = parseInt(req.params.id)
+
+	let historyItem = await selectQueryHistoryItemById(id)
+	if (!historyItem) {
+		return next(errorHandler(`A tag with id of ${id} was not found`, 404))
+	}
+	
+	try {
+		await deleteQueryHistoryItem(id)
+		res.status(200).json({ message: 'Successfully deleted' })
+	} catch (error) {
+		console.error(error)
+
+		return next(errorHandler(`Delete tag failed`, 500))
+	}
 }
 
 export {
