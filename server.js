@@ -13,7 +13,6 @@ import errorHandler from './middleware/error.js'
 import notFound from './middleware/notFound.js'
 
 // routes
-import posts from './routes/posts.js'
 import tags from './routes/tags.js'
 import historyItem from './routes/historyItem.js'
 
@@ -31,7 +30,6 @@ app.use(logger)
 app.use(express.static(path.join(__dirname, 'public')))
 
 // routes
-app.use('/api/posts', posts)
 app.use('/api/tags', tags)
 app.use('/api/historyItem', historyItem)
 
