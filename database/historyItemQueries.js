@@ -46,10 +46,19 @@ const updateQueryHistoryItem = async updateHistoryItem => {
 	}
 }
 
+const deleteQueryHistoryItem = async id => {
+	try {
+		await commonSql.delete('history_item', id)
+	} catch (error) {
+		throw new Error('historyItemQueries delete tag' + error)
+	}
+}
+
 export {
 	selectQueryHistoryItems,
 	selectQueryHistoryItemById,
 	selectQueryHistoryItemByName,
 	insertQueryHistoryItem,
-	updateQueryHistoryItem
+	updateQueryHistoryItem,
+	deleteQueryHistoryItem
 }
