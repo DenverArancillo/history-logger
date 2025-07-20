@@ -26,9 +26,8 @@ const getTag = async (req, res, next) => {
 const createTag = async (req, res, next) => {
 	const newTag = { tag_name: req.body.tag_name }
 
-	if (!newTag.tag_name) {
+	if (!newTag.tag_name)
 		return next(errorHandler('Please include a tag name', 400))
-	}
 
 	try {
 		await insertQueryTag(newTag)
@@ -46,10 +45,12 @@ const updateTag = async (req, res, next) => {
 	const id = parseInt(req.params.id)
 	const updateTag = { id, tag_name: req.body.tag_name }
 
+	if (!updateTag.tag_name)
+		return next(errorHandler('Please include a tag name', 400))
+
 	let tag = await selectQueryTagById(id)
-	if (!tag) {
+	if (!tag)
 		return next(errorHandler(`A tag with id of ${id} was not found`, 404))
-	}
 
 	try {
 		await updateQueryTag(updateTag)
@@ -67,9 +68,8 @@ const deleteTag = async (req, res, next) => {
 	const id = parseInt(req.params.id)
 
 	let tag = await selectQueryTagById(id)
-	if (!tag) {
+	if (!tag)
 		return next(errorHandler(`A tag with id of ${id} was not found`, 404))
-	}
 	
 	try {
 		await deleteQueryTag(id)
