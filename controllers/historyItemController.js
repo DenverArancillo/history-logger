@@ -111,9 +111,9 @@ const updateHistoryItemType = async (req, res, next) => {
 }
 
 const deleteHistoryItem = async (req, res, next) => {
-	// add check if exsting history_item_tag entry exists
-
 	const id = parseInt(req.params.id)
+
+	// add check if exsting history_item_tag entry exists
 
 	let historyItem = await selectQueryHistoryItemById(id)
 	if (!historyItem) {
