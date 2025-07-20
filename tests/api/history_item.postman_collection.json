@@ -517,6 +517,119 @@
 			]
 		},
 		{
+			"name": "DELETE history_item",
+			"item": [
+				{
+					"name": "Delete history item",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const { response, test, expect, sendRequest } = pm\r",
+									"\r",
+									"test('should have status code 200', () => {\r",
+									"    response.to.have.status(200)\r",
+									"})\r",
+									"\r",
+									"test('should have message property in response body', () => {\r",
+									"    expect(response.json()).to.have.property('message')\r",
+									"})\r",
+									"\r",
+									"test('get single tag api shound not find deleted tag', () => {\r",
+									"    let apiUrl = pm.environment.replaceIn('{{apiUrl}}')\r",
+									"    let deletedHistoryItemId = pm.request.url.path.pop()\r",
+									"    \r",
+									"    sendRequest(`${apiUrl}/historyItem/${deletedHistoryItemId}`, (error, testResponse) => {\r",
+									"        if (error) console.log(error)\r",
+									"\r",
+									"        expect(testResponse).to.have.property('code', 404)\r",
+									"    })\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{apiUrl}}/historyItem/{{test_history_item_id}}",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"historyItem",
+								"{{test_history_item_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Error missing history item id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const { response, test, expect } = pm\r",
+									"\r",
+									"test('should have status code 404', () => {\r",
+									"    response.to.have.status(404)\r",
+									"})\r",
+									"\r",
+									"test('should have message property in response body', () => {\r",
+									"    expect(response.json()).to.have.property('message')\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{apiUrl}}/historyItem/",
+							"host": [
+								"{{apiUrl}}"
+							],
+							"path": [
+								"historyItem",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Get all history items",
 			"event": [
 				{
@@ -604,65 +717,6 @@
 					"path": [
 						"historyItem",
 						"1"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Delete history item",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"exec": [
-							"const { response, test, expect, sendRequest } = pm\r",
-							"\r",
-							"test('should have status code 200', () => {\r",
-							"    response.to.have.status(200)\r",
-							"})\r",
-							"\r",
-							"test('should have message property in response body', () => {\r",
-							"    expect(response.json()).to.have.property('message')\r",
-							"})\r",
-							"\r",
-							"test('get single tag api shound not find deleted tag', () => {\r",
-							"    let apiUrl = pm.environment.replaceIn('{{apiUrl}}')\r",
-							"    let deletedHistoryItemId = pm.request.url.path.pop()\r",
-							"    \r",
-							"    sendRequest(`${apiUrl}/historyItem/${deletedHistoryItemId}`, (error, testResponse) => {\r",
-							"        if (error) console.log(error)\r",
-							"\r",
-							"        expect(testResponse).to.have.property('code', 404)\r",
-							"    })\r",
-							"})"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				},
-				{
-					"listen": "prerequest",
-					"script": {
-						"exec": [
-							""
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "{{apiUrl}}/historyItem/{{test_history_item_id}}",
-					"host": [
-						"{{apiUrl}}"
-					],
-					"path": [
-						"historyItem",
-						"{{test_history_item_id}}"
 					]
 				}
 			},
