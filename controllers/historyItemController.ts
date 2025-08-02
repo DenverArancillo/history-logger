@@ -1,4 +1,5 @@
-import { errorHandler } from './commonFunctions.js'
+import { Request, Response, NextFunction } from 'express'
+import { errorHandler } from './commonFunctions'
 import {
 	selectQueryHistoryItems,
 	selectQueryHistoryItemById,
@@ -6,18 +7,24 @@ import {
 	insertQueryHistoryItem,
 	updateQueryHistoryItem,
 	deleteQueryHistoryItem
-} from '../database/historyItemQueries.js'
+} from '../database/historyItemQueries'
 
-const historyItemType = process.env.HISTORY_ITEM_TYPES.split('|')
+import {
+	PrepareInsertHistoryItem,
+	HistoryItem,
+	PrepareUpdateHistoryItem
+} from '../ts/interface/database/historyItem'
 
-const getAllHistoryItems = async (req, res) => {
-	let historyItems = await selectQueryHistoryItems()
+const historyItemType: string[] =  process.env.HISTORY_ITEM_TYPES!.split('|')
+
+const getAllHistoryItems = async (_req: Request, res: Response): Promise<void> => {
+	let historyItems: HistoryItem[] = await selectQueryHistoryItems()
 	res.status(200).json(historyItems)
 }
 
-const getHistoryItem = async (req, res, next) => {
-	let id = parseInt(req.params.id)
-	let historyItem = await selectQueryHistoryItemById(id)
+const getHistoryItem = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+	let id: number = parseInt(req.params.id)
+	let historyItem: HistoryItem = await selectQueryHistoryItemById(id)
 
 	if (!historyItem) {
 		return next(errorHandler(`A history item with id of ${id} was not found`, 404))
@@ -26,8 +33,8 @@ const getHistoryItem = async (req, res, next) => {
 	}
 }
 
-const createHistoryItem = async (req, res, next) => {
-	const newHistoryItem = { 
+const createHistoryItem = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+	const newHistoryItem: PrepareInsertHistoryItem = { 
 		history_item_name: req.body.history_item_name,
 		history_item_type: req.body.history_item_type
 	}
@@ -45,7 +52,7 @@ const createHistoryItem = async (req, res, next) => {
 	try {
 		await insertQueryHistoryItem(newHistoryItem)
 		
-		let createdHistoryItem = await selectQueryHistoryItemByName(newHistoryItem.history_item_name)
+		let createdHistoryItem: HistoryItem = await selectQueryHistoryItemByName(newHistoryItem.history_item_name)
 
 		res.status(201).json({ 
 			...createdHistoryItem,
@@ -58,9 +65,9 @@ const createHistoryItem = async (req, res, next) => {
 	}
 }
 
-const updateHistoryItemName = async (req, res, next) => {
-	const id = parseInt(req.params.id)
-	const updateHistoryItemName = { 
+const updateHistoryItemName = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+	const id: number = parseInt(req.params.id)
+	const updateHistoryItemName: PrepareUpdateHistoryItem = { 
 		id, 
 		history_item_name: req.body.history_item_name,
 	}
@@ -68,14 +75,14 @@ const updateHistoryItemName = async (req, res, next) => {
 	if (!updateHistoryItemName.history_item_name)
 		return next(errorHandler('Please include a history item name', 400))
 
-	let historyItem = await selectQueryHistoryItemById(id)
+	let historyItem: HistoryItem = await selectQueryHistoryItemById(id)
 	if (!historyItem)
 		return next(errorHandler(`A history item with id of ${id} was not found`, 404))
 
 	try {
 		await updateQueryHistoryItem(updateHistoryItemName)
 
-		let updatedHistoryItemName = await selectQueryHistoryItemById(id)
+		let updatedHistoryItemName: HistoryItem = await selectQueryHistoryItemById(id)
 		res.status(200).json(updatedHistoryItemName)
 	} catch (error) {
 		console.error(error)
@@ -84,9 +91,9 @@ const updateHistoryItemName = async (req, res, next) => {
 	}
 }
 
-const updateHistoryItemType = async (req, res, next) => {
-	const id = parseInt(req.params.id)
-	const updateHistoryItemType = {
+const updateHistoryItemType = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+	const id: number = parseInt(req.params.id)
+	const updateHistoryItemType: PrepareUpdateHistoryItem = {
 		id,
 		history_item_type: req.body.history_item_type,
 	}
@@ -94,14 +101,14 @@ const updateHistoryItemType = async (req, res, next) => {
 	if (!updateHistoryItemType.history_item_type)
 		return next(errorHandler('Please include a history item type', 400))
 
-	let historyItem = await selectQueryHistoryItemById(id)
+	let historyItem: HistoryItem = await selectQueryHistoryItemById(id)
 	if (!historyItem)
 		return next(errorHandler(`A history item with id of ${id} was not found`, 404))
 
 	try {
 		await updateQueryHistoryItem(updateHistoryItemType)
 
-		let updatedHistoryItemName = await selectQueryHistoryItemById(id)
+		let updatedHistoryItemName: HistoryItem = await selectQueryHistoryItemById(id)
 		res.status(200).json(updatedHistoryItemName)
 	} catch (error) {
 		console.error(error)
@@ -110,12 +117,12 @@ const updateHistoryItemType = async (req, res, next) => {
 	}
 }
 
-const deleteHistoryItem = async (req, res, next) => {
-	const id = parseInt(req.params.id)
+const deleteHistoryItem = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+	const id: number = parseInt(req.params.id)
 
 	// add check if exsting history_item_tag entry exists
 
-	let historyItem = await selectQueryHistoryItemById(id)
+	let historyItem: HistoryItem = await selectQueryHistoryItemById(id)
 	if (!historyItem) {
 		return next(errorHandler(`A tag with id of ${id} was not found`, 404))
 	}
