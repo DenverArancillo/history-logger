@@ -1,11 +1,12 @@
-import commonSql from "./commonSql.js"
+import commonSql from "./commonSql"
+import { Tag, PrepareTag } from '../ts/interface/database/tags'
 
 /**
  * Select all tags
  */
-const selectQueryAllTags = async () => {
+const selectQueryAllTags = async (): Promise<Tag[]> => {
 	try {
-		return await commonSql.selectAll('tag')
+		return await commonSql.selectAll<Tag>('tag')
 	} catch (error) {
 		throw new Error('tagQueries select all tags' + error)
 	}
@@ -13,11 +14,11 @@ const selectQueryAllTags = async () => {
 
 /**
  * Select a tag by id
- * @param {int} id
+ * @param {number} id
  */
-const selectQueryTagById = async id => {
+const selectQueryTagById = async (id: number): Promise<Tag>  => {
 	try {
-		return await commonSql.selectById('tag', id)
+		return await commonSql.selectById<Tag>('tag', id)
 	} catch (error) {
 		throw new Error('tagQueries select tag by id' + error)
 	}
@@ -28,9 +29,9 @@ const selectQueryTagById = async id => {
  * @param {object} newTag New tag object
  * @param {string} newTag.tag_name tag name
  */
-const insertQueryTag = async newTag => {
+const insertQueryTag = async (newTag: PrepareTag) => {
 	try {
-		await commonSql.insert('tag', newTag)
+		await commonSql.insert<PrepareTag>('tag', newTag)
 	} catch (error) {
 		throw new Error('tagQueries insert tag' + error)
 	}
@@ -42,9 +43,9 @@ const insertQueryTag = async newTag => {
  * @param {int} updateTag.id tag id
  * @param {string} updateTag.tag_name tag name
  */
-const updateQueryTag = async updateTag => {
+const updateQueryTag = async (updateTag: PrepareTag) => {
 	try {
-		await commonSql.update('tag', updateTag)
+		await commonSql.update<PrepareTag>('tag', updateTag)
 	} catch (error) {
 		throw new Error('tagQueries update tag' + error)
 	}
@@ -52,9 +53,9 @@ const updateQueryTag = async updateTag => {
 
 /**
  * Delete existing tag
- * @param {int} id tag id
+ * @param {number} id tag id
  */
-const deleteQueryTag = async id => {
+const deleteQueryTag = async (id: number) => {
 	try {
 		await commonSql.delete('tag', id)
 	} catch (error) {
