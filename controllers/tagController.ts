@@ -11,7 +11,7 @@ import {
 import { PrepareTag, Tag } from '../ts/interface/database/tags'
 
 const getAllTags = async (_req: Request, res: Response): Promise<void> => {
-	let tags: Array<Tag> = await selectQueryAllTags()
+	let tags: Tag[] = await selectQueryAllTags()
 	res.status(200).json(tags)
 }
 
@@ -35,7 +35,7 @@ const createTag = async (req: Request, res: Response, next: NextFunction): Promi
 	try {
 		await insertQueryTag(newTag)
 
-		let tags: Array<Tag> = await selectQueryAllTags()
+		let tags: Tag[] = await selectQueryAllTags()
 		res.status(201).json(tags)
 	} catch (error) {
 		console.error(error)
