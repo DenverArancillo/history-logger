@@ -6,7 +6,7 @@ import {
 	updateHistoryItemName,
 	updateHistoryItemType,
 	deleteHistoryItem
-} from '../controllers/historyItemController.js'
+} from '../controllers/historyItemController'
 
 const router = Router()
 
