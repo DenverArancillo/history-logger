@@ -8,7 +8,7 @@ const selectQueryAllTags = async (): Promise<Tag[]> => {
 	try {
 		return await commonSql.selectAll<Tag>('tag')
 	} catch (error) {
-		throw new Error('tagQueries select all tags' + error)
+		throw new Error('tagQueries select all tags ' + error)
 	}
 }
 
@@ -20,7 +20,7 @@ const selectQueryTagById = async (id: number): Promise<Tag>  => {
 	try {
 		return await commonSql.selectById<Tag>('tag', id)
 	} catch (error) {
-		throw new Error('tagQueries select tag by id' + error)
+		throw new Error('tagQueries select tag by id ' + error)
 	}
 }
 
@@ -33,7 +33,7 @@ const insertQueryTag = async (newTag: PrepareTag) => {
 	try {
 		await commonSql.insert<PrepareTag>('tag', newTag)
 	} catch (error) {
-		throw new Error('tagQueries insert tag' + error)
+		throw new Error('tagQueries insert tag ' + error)
 	}
 }
 
@@ -47,7 +47,7 @@ const updateQueryTag = async (updateTag: PrepareTag) => {
 	try {
 		await commonSql.update<PrepareTag>('tag', updateTag)
 	} catch (error) {
-		throw new Error('tagQueries update tag' + error)
+		throw new Error('tagQueries update tag ' + error)
 	}
 }
 
@@ -59,7 +59,7 @@ const deleteQueryTag = async (id: number) => {
 	try {
 		await commonSql.delete('tag', id)
 	} catch (error) {
-		throw new Error('tagQueries delete tag' + error)
+		throw new Error('tagQueries delete tag ' + error)
 	}
 }
 
