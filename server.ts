@@ -1,4 +1,4 @@
-import express from 'express'
+import express, { Express } from 'express'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -8,16 +8,16 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 // middleware
-import logger from './middleware/logger.js'
-import errorHandler from './middleware/error.js'
-import notFound from './middleware/notFound.js'
+import logger from './middleware/logger'
+import notFound from './middleware/notFound'
+import errorHandler from './middleware/error'
 
 // routes
 import tags from './routes/tags.js'
 import historyItem from './routes/historyItem.js'
 
 const port = process.env.PORT || 8000
-const app = express()
+const app: Express = express()
 
 // body parser middleware
 app.use(express.json())
