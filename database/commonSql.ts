@@ -23,11 +23,11 @@ export default class commonSql {
 		return this.db.close()
 	}
 
-	static async all<Type>(query: string, param?: Array<String>, errorMessage?: string): Promise<Array<Type>> {
+	static async all<Type>(query: string, param?: string[], errorMessage?: string): Promise<Type[]> {
 		await this.open()
 
 		return new Promise((resolve, reject) => {
-			this.db.all(query, param, (error, rows: Array<Type>) => {
+			this.db.all(query, param, (error, rows: Type[]) => {
 				if (error) {
 					// provide default error message if undefined
 					errorMessage = (errorMessage) ? errorMessage : 'common sql all: '
@@ -45,8 +45,12 @@ export default class commonSql {
 
 		return new Promise((resolve, reject) => {
 			this.db.run(query, param, error => {
-				if (error) reject(errorMessage + error.message)
-				
+				if (error) {
+					// provide default error message if undefined
+					errorMessage = (errorMessage) ? errorMessage : 'common sql all: '
+					reject(errorMessage + error.message)
+				}
+
 				this.close()
 				resolve(true)
 			})
@@ -66,7 +70,7 @@ export default class commonSql {
 		})
 	}
 
-	static selectAll<Type>(table: string): Promise<Array<Type>> {
+	static selectAll<Type>(table: string): Promise<Type[]> {
 		return this.all<Type>(`SELECT * FROM ${table}`)
 	}
 
@@ -83,7 +87,7 @@ export default class commonSql {
 		let queryColumn = '('
 		let queryValue = 'VALUES('
 		let propertyCount = Object.keys(columnAndValue).length - 1
-		let dataValues: Array<string> = []
+		let dataValues: string[] = []
 
 		Object.entries(columnAndValue).forEach(([key, value], index) => {
 			if (index === propertyCount) {
@@ -111,11 +115,11 @@ export default class commonSql {
 
 	static prepareUpdateQuery<Type extends TempObject>(table: string, columnAndValue: Type): PrepareStatement {
 		let query = `UPDATE ${table} SET`
-		let { id, ...others } = columnAndValue
+		let { id } = columnAndValue
 		let columns = ''
 		let whereClause = `WHERE id = ${id}`
-		let propertyCount = Object.keys(others).length - 1
-		let dataValues: Array<string> = []
+		let propertyCount = Object.keys(columnAndValue).length - 1
+		let dataValues: string[] = []
 		
 		Object.entries(columnAndValue).forEach(([key, value], index) => {
 			if (key === 'id') return // continue to next iteration
