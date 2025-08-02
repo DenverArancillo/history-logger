@@ -3,8 +3,10 @@
     "version": "1.0.0",
     "main": "index.js",
     "scripts": {
-        "start": "node --env-file=.env server",
-        "dev": "node --watch --env-file=.env server",
+        "build": "tsc",
+        "tsw": "tsc -w",
+        "start": "tsc & node --env-file=.env dist/server",
+        "dev": "node --watch --env-file=.env dist/server",
         "test:api:tag": "newman run tests/api/tags.postman_collection.json -e tests/api/env/historylog.postman_environment.json",
         "test:api:history_item": "newman run tests/api/history_item.postman_collection.json -e tests/api/env/historylog.postman_environment.json"
     },
