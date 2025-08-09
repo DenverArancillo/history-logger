@@ -5,9 +5,9 @@ import {
 	createTag,
 	updateTag,
 	deleteTag
-} from '../controllers/tagController.js'
+} from '../controllers/tagController'
 
-const router = Router()
+const router: Router = Router()
 
 // get all tags
 router.get('/', getAllTags)

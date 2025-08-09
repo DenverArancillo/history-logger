@@ -1,20 +1,23 @@
-import { errorHandler } from './commonFunctions.js'
+import { NextFunction, Request, Response } from 'express'
+import { errorHandler } from './commonFunctions'
 import { 
-	selectQueryAllTags, 
+	selectQueryAllTags,
 	selectQueryTagById,
 	insertQueryTag,
 	updateQueryTag,
 	deleteQueryTag
-} from '../database/tagQueries.js'
+} from '../database/tagQueries'
 
-const getAllTags = async (req, res) => {
-	let tags = await selectQueryAllTags()
+import { PrepareTag, Tag } from '../ts/interface/database/tags'
+
+const getAllTags = async (_req: Request, res: Response): Promise<void> => {
+	let tags: Tag[] = await selectQueryAllTags()
 	res.status(200).json(tags)
 }
 
-const getTag = async (req, res, next) => {
-	const id = parseInt(req.params.id)
-	let tag = await selectQueryTagById(id)
+const getTag = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+	const id: number = parseInt(req.params.id)
+	let tag: Tag = await selectQueryTagById(id)
 
 	if (!tag) {
 		return next(errorHandler(`A tag with id of ${id} was not found`, 404))
@@ -23,8 +26,8 @@ const getTag = async (req, res, next) => {
 	}
 }
 
-const createTag = async (req, res, next) => {
-	const newTag = { tag_name: req.body.tag_name }
+const createTag = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+	const newTag: PrepareTag = { tag_name: req.body.tag_name }
 
 	if (!newTag.tag_name)
 		return next(errorHandler('Please include a tag name', 400))
@@ -32,7 +35,7 @@ const createTag = async (req, res, next) => {
 	try {
 		await insertQueryTag(newTag)
 
-		let tags = await selectQueryAllTags()
+		let tags: Tag[] = await selectQueryAllTags()
 		res.status(201).json(tags)
 	} catch (error) {
 		console.error(error)
@@ -41,21 +44,21 @@ const createTag = async (req, res, next) => {
 	}
 }
 
-const updateTag = async (req, res, next) => {
-	const id = parseInt(req.params.id)
-	const updateTag = { id, tag_name: req.body.tag_name }
+const updateTag = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+	const id: number = parseInt(req.params.id)
+	const updateTag: PrepareTag = { id, tag_name: req.body.tag_name }
 
 	if (!updateTag.tag_name)
 		return next(errorHandler('Please include a tag name', 400))
 
-	let tag = await selectQueryTagById(id)
+	let tag: Tag = await selectQueryTagById(id)
 	if (!tag)
 		return next(errorHandler(`A tag with id of ${id} was not found`, 404))
 
 	try {
 		await updateQueryTag(updateTag)
 
-		let updatedTag = await selectQueryTagById(id)
+		let updatedTag: Tag = await selectQueryTagById(id)
 		res.status(200).json(updatedTag)
 	} catch (error) {
 		console.error(error)
@@ -64,10 +67,10 @@ const updateTag = async (req, res, next) => {
 	}
 }
 
-const deleteTag = async (req, res, next) => {
-	const id = parseInt(req.params.id)
+const deleteTag = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+	const id: number = parseInt(req.params.id)
 
-	let tag = await selectQueryTagById(id)
+	let tag: Tag = await selectQueryTagById(id)
 	if (!tag)
 		return next(errorHandler(`A tag with id of ${id} was not found`, 404))
 	
