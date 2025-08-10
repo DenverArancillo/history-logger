@@ -1,6 +1,14 @@
+# common
+node_modules
+
+# history-logger
 .env
 *.db
-
-/.vscode
+.vscode
 /dist
-/node_modules
+
+# Playwright
+tests/playwright/test-results/
+tests/playwright/playwright-report/
+tests/playwright/blob-report/
+tests/playwright/playwright/.cache/
