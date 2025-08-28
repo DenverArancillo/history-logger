@@ -1,4 +1,4 @@
-import sqlite3 from 'sqlite3'
+const sqlite3 = require('sqlite3')
 
 sqlite3.verbose()
 
