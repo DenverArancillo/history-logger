@@ -1,7 +1,6 @@
 import { test, expect } from '@playwright/test'
 import { faker } from '@faker-js/faker'
 import { HistoryItem } from '../../../../ts/interface/database/historyItem'
-import { resolve } from 'path'
 
 test.describe.configure({ mode: 'serial' })
 
