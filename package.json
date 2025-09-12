@@ -20,6 +20,7 @@
         "sqlite3": "^5.1.7"
     },
     "devDependencies": {
+        "@faker-js/faker": "^10.0.0",
         "@types/express": "^5.0.3",
         "@types/node": "^24.1.0",
         "newman": "^6.2.1",
