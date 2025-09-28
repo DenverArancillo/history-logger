@@ -1,4 +1,3 @@
-// import sqlite from 'aa-sqlite'
 import sqlite3, { Database } from 'sqlite3'
 import { PrepareStatement, TempObject } from '../ts/interface/database/commonSql';
 
